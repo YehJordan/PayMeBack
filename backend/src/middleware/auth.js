@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import jwksClient from "jwks-rsa";
 
 // Initialize the JWKS client to fetch your Supabase project's public keys
-const supabaseUrl = process.env.SUPABASE_URL || "https://kvtunuhxhnhxqeykaovw.supabase.co";
+const supabaseUrl = process.env.SUPABASE_URL;
 const client = jwksClient({
   jwksUri: `${supabaseUrl}/auth/v1/.well-known/jwks.json`
 });
