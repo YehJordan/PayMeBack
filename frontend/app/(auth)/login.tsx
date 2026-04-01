@@ -1,10 +1,19 @@
 import React, { useState } from "react";
-import { Alert, StyleSheet, View, Text, TextInput, Button } from "react-native";
+import {
+  Alert,
+  View,
+  Text,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+} from "react-native";
 import { supabase } from "../../lib/supabase";
 import * as WebBrowser from "expo-web-browser";
 import * as QueryParams from "expo-auth-session/build/QueryParams";
 import { makeRedirectUri } from "expo-auth-session";
-import * as Linking from "expo-linking";
+import { styles } from "../../styles/auth/login.style";
+import { AppInput } from "../../components/ui/Input";
+import { AppButton } from "../../components/ui/Button";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -102,81 +111,65 @@ export default function Auth() {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Welcome back</Text>
-      <View style={[styles.verticallySpaced, styles.mt20]}>
-        <TextInput
-          style={styles.input}
-          onChangeText={(text) => setEmail(text)}
-          value={email}
-          placeholder="email@address.com"
-          autoCapitalize={"none"}
-        />
-      </View>
-      <View style={styles.verticallySpaced}>
-        <TextInput
-          style={styles.input}
-          onChangeText={(text) => setPassword(text)}
-          value={password}
-          secureTextEntry={true}
-          placeholder="Password"
-          autoCapitalize={"none"}
-        />
-      </View>
-      <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Button
-          title="Sign in"
-          disabled={loading}
-          onPress={() => signInWithEmail()}
-        />
-      </View>
-      <View style={styles.verticallySpaced}>
-        <Button
-          title="Sign up"
-          disabled={loading}
-          onPress={() => signUpWithEmail()}
-        />
-      </View>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}
+    >
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View style={styles.container}>
+          <View style={styles.headerContainer}>
+            <Text style={styles.title}>Welcome back</Text>
+            <Text style={styles.subtitle}>Sign in to your account</Text>
+          </View>
 
-      <Text style={{ textAlign: "center", marginVertical: 10 }}>OR</Text>
+          <View style={styles.formContainer}>
+            <AppInput
+              label="Email"
+              onChangeText={setEmail}
+              value={email}
+              placeholder="email@address.com"
+              keyboardType="email-address"
+              autoCapitalize="none"
+            />
 
-      <View style={styles.verticallySpaced}>
-        <Button
-          title="Sign in with Google"
-          disabled={loading}
-          onPress={() => signInWithGoogle()}
-        />
-      </View>
-    </View>
+            <AppInput
+              label="Password"
+              onChangeText={setPassword}
+              value={password}
+              secureTextEntry={true}
+              placeholder="Password"
+              autoCapitalize="none"
+            />
+          </View>
+
+          <View style={styles.buttonContainer}>
+            <AppButton
+              label={loading ? "Loading..." : "Sign in"}
+              onPress={signInWithEmail}
+            />
+            <AppButton
+              label="Create an account"
+              variant="secondary"
+              onPress={signUpWithEmail}
+            />
+          </View>
+
+          <View style={styles.dividerContainer}>
+            <View style={styles.dividerLine} />
+            <Text style={styles.dividerText}>OR</Text>
+            <View style={styles.dividerLine} />
+          </View>
+
+          <AppButton
+            label="Sign in with Google"
+            variant="secondary"
+            onPress={signInWithGoogle}
+          />
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-    flex: 1,
-    justifyContent: "center",
-    backgroundColor: "#fff",
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
-    textAlign: "center",
-  },
-  verticallySpaced: {
-    paddingTop: 4,
-    paddingBottom: 4,
-    alignSelf: "stretch",
-  },
-  mt20: {
-    marginTop: 20,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 12,
-    borderRadius: 5,
-    backgroundColor: "#f9f9f9",
-  },
-});

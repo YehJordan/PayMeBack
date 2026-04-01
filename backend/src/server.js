@@ -1,9 +1,8 @@
+import "dotenv/config";
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
 import { verifySupabaseToken } from "./middleware/auth.js";
-
-dotenv.config();
+import groupsRouter from "./routes/groups.js";
 
 const app = express();
 
@@ -23,6 +22,9 @@ app.get("/protected", verifySupabaseToken, (req, res) => {
     user: req.user // Decoded JWT data from Supabase
   });
 });
+
+// API Routes
+app.use("/api/groups", groupsRouter);
 
 // Start server
 const PORT = process.env.PORT || 5000;

@@ -13,7 +13,8 @@ CREATE TABLE groups (
   id SERIAL PRIMARY KEY,           
   name VARCHAR(100) NOT NULL,      
   description TEXT,                
-  budget NUMERIC(10, 2) DEFAULT 0  
+  budget NUMERIC(10, 2) DEFAULT 0,
+  creator_id UUID REFERENCES users(id) ON DELETE SET NULL
 );
 
 -----------------------------------

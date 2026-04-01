@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 import { Session } from "@supabase/supabase-js";
 import { View, ActivityIndicator } from "react-native";
+import { styles } from "../styles/layout.style";
 
 export default function RootLayout() {
   const [session, setSession] = useState<Session | null>(null);
@@ -39,7 +40,7 @@ export default function RootLayout() {
 
   if (loading) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" />
       </View>
     );
@@ -49,6 +50,10 @@ export default function RootLayout() {
     <Stack>
       <Stack.Screen name="(auth)/login" options={{ headerShown: false }} />
       <Stack.Screen name="index" options={{ title: "Home" }} />
+      <Stack.Screen
+        name="groups"
+        options={{ title: "Groups Overview", headerBackTitle: "Home" }}
+      />
     </Stack>
   );
 }
